@@ -1,4 +1,4 @@
 export const environment = {
     production: false,
-    apiEndpoint: 'http://localhost:8080'
+    apiEndpoint: 'https://nw06ts0x-8080.asse.devtunnels.ms/'
 };
