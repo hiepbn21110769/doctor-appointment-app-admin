@@ -1,0 +1,118 @@
+<div class="card flex justify-content-center">
+    <p-progressSpinner *ngIf="loadingFetchingData" ariaLabel="loading" [style]="{display: 'flex;'}" />
+</div>
+<div class="card" *ngIf="!loadingFetchingData">
+    <p-toolbar>
+    </p-toolbar>
+    
+    
+    <p-table #myTab [columns]="cols" [exportHeader]="'customExportHeader'" [value]="patients" styleClass="p-datatable-striped" [paginator]="true"
+    [tableStyle]="{'min-width': '75rem'}" [rowHover]="true " dataKey="id" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]"
+    [globalFilterFields]="['firstName', 'lastName']" [(selection)]="selectedPatients">
+    <ng-template pTemplate="caption">
+        <p-toolbar styleClass="mb-4 gap-2">
+            <ng-template pTemplate="left">
+                <p-button severity="success" label="New" icon="pi pi-plus" class="mr-2"
+                    (onClick)="showAddNewPatient()" />
+                <p-button severity="danger" label="Delete" icon="pi pi-trash" 
+                    [disabled]="!selectedPatients || !selectedPatients.length" (onClick)="deleteMultiplePatient()"/>
+            </ng-template>
+            <ng-template pTemplate="right">
+                <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import"
+                    class="mr-2 inline-block" />
+                <p-button severity="help" label="Export" icon="pi pi-upload" (onClick)="myTab.exportCSV()"/>
+            </ng-template>
+        </p-toolbar>
+    </ng-template>
+    <ng-template pTemplate="header">
+            
+            <tr>
+                <th style="width: 4rem">
+                    <p-tableHeaderCheckbox />
+                </th>
+                <th pSortableColumn="id" style="width:5rem">
+                    <div class="flex justify-content-between align-items-center">
+                        Id <p-sortIcon field="id" />
+                        <p-columnFilter type="text" field="id" display="menu" class="ml-auto" />
+                    </div>
+                </th>
+                <th pSortableColumn="firstName" style="min-width:12rem">
+                    <div class="flex justify-content-between align-items-center">
+                        First Name <p-sortIcon field="firstName" />
+                        <p-columnFilter type="text" field="firstName" display="menu" class="ml-auto" />
+                    </div>
+                </th>
+                <th pSortableColumn="lastName" style="min-width:12rem">
+                    Last Name <p-sortIcon field="lastName" />
+                    <p-columnFilter type="text" field="lastName" display="menu" class="ml-auto" />
+
+                </th>
+                <th style="min-width:10rem">
+                    Patient Avatar 
+                </th>
+                <th pSortableColumn="gender" style="min-width:15rem">
+                    Gender <p-sortIcon field="gender" />
+                </th>
+                <th pSortableColumn="email" style="min-width:15rem">
+                    Email <p-sortIcon field="email" />
+                    <p-columnFilter type="text" field="email" display="menu" class="ml-auto" />
+                </th>
+                <th pSortableColumn="address" style="min-width:15rem">
+                    Address <p-sortIcon field="address" />
+                    <p-columnFilter type="text" field="address" display="menu" class="ml-auto" />
+
+                </th>
+                <th pSortableColumn="phone" style="min-width:15rem">
+                    Phone <p-sortIcon field="phone" />
+                    <p-columnFilter type="text" field="phone" display="menu" class="ml-auto" />
+
+                </th>
+                <th pSortableColumn="dateOfBirth" style="min-width:15rem">
+                    BirthDay <p-sortIcon field="dateOfBirth" />
+                    <p-columnFilter type="text" dateFormat="dd/mm/yy" field="dateOfBirth" display="menu" class="ml-auto" />
+                </th>
+                <th></th>
+            </tr>
+
+
+        </ng-template>
+        <ng-template pTemplate="body" let-patient class="body">
+            
+                <tr *ngIf="!loadingFetchingData">
+                    <td>
+                        <p-tableCheckbox [value]="patient" />
+                    </td>
+                    <td>{{patient.id}}</td>
+                    <td>{{patient.firstName}}</td>
+                    <td>{{patient.lastName}}</td>
+                    <td><img class="doctor-avatar" [src]="patient.avatarFilePath" alt=""></td>
+                    <td><p-tag [value]="patient.gender ? 'Male': 'Female'" [severity]="getSeverity(patient.gender)" rounded="true" [style]="{width: '54px;'}"/></td>
+                    <td>{{patient.email}}</td>
+                    <td>{{patient.address}}</td>
+                    <td>{{patient.phone}}</td>
+                    <td>{{patient.email}}</td>
+                    <td>{{patient.dateOfBirth | date: 'dd-MM-yyyy'}}</td>
+                    <td style="display: flex; justify-content: space-evenly;">
+                        <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" severity="success" (onClick)="openEditDialog(patient)" />
+                        <p-button icon="far fa-eye" class="mr-2" [rounded]="true" [outlined]="true" severity="warning" (onClick)="openPatientDashboard(patient)" />
+                    </td>
+                   
+                </tr>
+                <tr *ngIf="loadingFetchingData">
+                    <td><p-skeleton/></td>
+                    <td><p-skeleton/></td>
+                    <td><p-skeleton/></td>
+                    <td><p-skeleton/></td>
+                    <td><p-skeleton/></td>
+                    <td><p-skeleton/></td>
+                    <td><p-skeleton/></td>
+                    <td><p-skeleton/></td>
+                    <td><p-skeleton/></td>
+                    <td><p-skeleton/></td>
+                    <td><p-skeleton/></td>
+                    <td><p-skeleton/></td>
+                </tr>
+        </ng-template>
+    </p-table>
+</div>
+<p-confirmDialog></p-confirmDialog>
